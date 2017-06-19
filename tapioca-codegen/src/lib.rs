@@ -27,10 +27,14 @@ pub fn infer(input: TokenStream) -> TokenStream {
 }
 
 fn impl_schema(schema_url: &str) -> quote::Tokens {
-    let mut url_hasher = DefaultHasher::new();
-    schema_url.hash(&mut url_hasher);
+    let schema_fname = if schema_url.find("://").is_none() {
+        schema_url.into()
+    } else {
+        let mut url_hasher = DefaultHasher::new();
+        schema_url.hash(&mut url_hasher);
+        format!("{}.yml", url_hasher.finish())
+    };
 
-    let schema_fname = format!("{}.yml", url_hasher.finish());
     let schema = match parse::parse_schema(&schema_fname) {
         Ok(s) => s,
         Err(_) => {

@@ -24,7 +24,8 @@ fn parse_first_doc(buf: &str) -> SchemaResult {
 }
 
 pub(super) fn parse_schema(schema_fname: &str) -> SchemaResult {
-    let mut file = fs::File::open(cache_path(&schema_fname))?;
+    let mut file = fs::File::open(schema_fname)
+        .or(fs::File::open(cache_path(schema_fname)))?;
     let mut buf = String::new();
 
     file.read_to_string(&mut buf)?;
