@@ -9,7 +9,7 @@ const CACHE_DIR: &'static str = ".tapioca-cache";
 type Schema = Yaml;
 type SchemaResult = Result<Schema, Box<Error + Send + Sync>>;
 
-fn cache_path(schema_fname: &String) -> String {
+fn cache_path(schema_fname: &str) -> String {
     fs::create_dir_all(&CACHE_DIR).unwrap();
     format!("{}/{}", &CACHE_DIR, &schema_fname)
 }
@@ -23,7 +23,7 @@ fn parse_first_doc(buf: &str) -> SchemaResult {
     }
 }
 
-pub(super) fn parse_schema(schema_fname: &String) -> SchemaResult {
+pub(super) fn parse_schema(schema_fname: &str) -> SchemaResult {
     let mut file = fs::File::open(cache_path(&schema_fname))?;
     let mut buf = String::new();
 
@@ -31,7 +31,7 @@ pub(super) fn parse_schema(schema_fname: &String) -> SchemaResult {
     parse_first_doc(&buf)
 }
 
-pub(super) fn fetch_schema(schema_fname: &String, schema_url: &str) -> SchemaResult {
+pub(super) fn fetch_schema(schema_fname: &str, schema_url: &str) -> SchemaResult {
     let mut file = fs::File::create(cache_path(&schema_fname))?;
     let mut buf = String::new();
 
